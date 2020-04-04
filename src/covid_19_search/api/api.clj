@@ -145,7 +145,7 @@
               :tags ["covid19"]
               (GET "/related" []
                    :query-params [query :- s/Str
-                                  limit :- s/Int]
+                                  {limit :- s/Int 10}]
                    :return s/Any
                    (related ctx query limit))
               (GET "/:paper-id" []
