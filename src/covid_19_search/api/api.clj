@@ -113,7 +113,6 @@
    limit :- s/Int]
   (let [exclude (cons query
                       (plural/pluralize-query query))
-        _ (println "exclude ==> " exclude)
         significant-agg {:keywords
                          {:significant_text
                           {:size (min limit 50)
