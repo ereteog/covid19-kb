@@ -1,12 +1,12 @@
 # covid-19-search
 
-An API made to index / search  and analyse Coronavirus related papaers.
-The papers are published by this [kaggle challenge](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge)
+An API made to index / search  and analyse Coronavirus related papers.
+The papers are published by this [Kaggle challenge](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge)
 
 ## Requirement
 You need to download papers from Kaggle challenge page.
 
-This project uses Elasticsearch 7.X, you can use the docker container using the dockercompose file in `container`:
+This project uses Elasticsearch 7, you can use the docker container using the docker-compose file in `containers`:
 ```
 docker-compose -f containers/docker-compose.yml up
 ```
@@ -15,12 +15,12 @@ docker-compose -f containers/docker-compose.yml up
 
 Properly set Elasticsearch configuration in `resources/config.edn`.
 
-load papers
+a command is available to load papers
 ```
 lein run -m covid-19-search.import --paper-dir resources/CORD-19-research-challenge
 ```
 
-launch API
+launch the API
 ``` 
 lein ring server
 ```
