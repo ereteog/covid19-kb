@@ -3,11 +3,21 @@
 An API made to index / search  and analyse Coronavirus related papaers.
 The papers are published by this [kaggle challenge](https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge)
 
+## Requirement
+You need to download papers from Kaggle challenge page.
+
+This project uses Elasticsearch 7.X, you can use the docker container using the dockercompose file in `container`:
+```
+docker-compose -f containers/docker-compose.yml up
+```
+
 ## Usage
+
+Properly set Elasticsearch configuration in `resources/config.edn`.
 
 load papers
 ```
-lein run -m covid-19-search.import
+lein run -m covid-19-search.import --paper-dir resources/CORD-19-research-challenge
 ```
 
 launch API
@@ -93,16 +103,20 @@ returns a list of short paper description.
 
 3 paper formats are available: `abstract` (default), `full-text`, `raw-doc`.
 
-Having a paper id you can direct retrieve it, with the desired format:
+
+### Get paper from id
+Having a paper id you can directly retrieve it, with the desired format:
 ```
 GET /covid-19/136eb8ca0c1420b21582827d1aaf78a8cd7082f4?format=raw-doc
 ```
 
-Finally we propose to retrieve terms than are highly correlated with a given query
+### Related terms
+This API proposes to retrieve terms than are highly correlated with a given query
+For instance:
 ```
 GET /covid-19/related?query=coronavirus&limit=15
 ```
-returns top 15 most correlated terms ordered by similarity score, you will discover different coronavirus related aronyms (`cov`, `hcov`, `bcov`) and also that `mhv`, `229e`, `oc43`, `nl63` and `mers` are other type of human coronaviruses:
+Returns top 15 terms most correlated to `coronavirus` query. The result are ordered by similarity score. If you look at following result you can notice terms referring to different coronavirus type aronyms (`cov`, `hcov`, `bcov`), and also other human coronavirus referenced like `mhv`, `229e`, `oc43`, `nl63` and `mers`:
 ``` javascript
 [
   {
@@ -183,7 +197,7 @@ returns top 15 most correlated terms ordered by similarity score, you will disco
 ]
 ```
 
-for instance you on could find the most correlated terms  to the query `coronavirus chloroquine` which would match all the paper that contain both terms, and you will dicover other molecules:
+The next example retrieves the the most correlated terms to the query `coronavirus chloroquine` which would match all the papers that contain both terms, enabling us to discover other experimented treatments:
 ```
 GET /covid-19/related?query=coronavirus%20chloroquine&limit=10
 ```
@@ -268,7 +282,7 @@ returns:
 ]
 ```
 
-You can also look for `risk factor` and discover that `smoking`, `age`, `gender` and `chonic` decease are `variables` that impacts the severity of the decease:
+You can also look for `risk factor` and discover that `smoking`, `age`, `gender` and `chonic` deceases are `variables` that impacts the severity of coronaviruses:
 ``` javascript
 [
   {
@@ -376,7 +390,7 @@ You can also look for `risk factor` and discover that `smoking`, `age`, `gender`
 
 ## License
 
-Copyright © 2020 guigui
+Copyright © 2020 Guillaume ERETEO
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at

@@ -24,10 +24,10 @@
 
 (defn index-paper
   "index a paper"
-  [conn filepath]
+  [conn index filepath]
   (let [prepared (prepare-paper filepath)]
     (esd/index-doc conn
-                   (indexname)
+                   index
                    prepared
                    {:refresh "false"
                     :mk-id :paper_id})))

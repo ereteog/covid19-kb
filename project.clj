@@ -7,6 +7,7 @@
                  [org.clojure/data.json "1.0.0"]
                  [metosin/compojure-api "1.1.13"]
                  [prismatic/schema "1.1.12"]
+                 [org.clojure/tools.cli "1.0.194"]
                  [metosin/schema-tools "0.12.2"]
                  [threatgrid/ductile "0.1.0-SNAPSHOT"]]
 

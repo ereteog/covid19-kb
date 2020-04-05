@@ -3,6 +3,7 @@
             [ring.util.http-response :as resp]
             [schema.core :as s]
             [schema-tools.core :as st]
+            [covid-19-search.config :as c]
             [covid-19-search.index :as index]
             [clojure.string :as string]
             [ductile.conn :as esc]
@@ -11,6 +12,8 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [covid-19-search.api.format :as format]
             [covid-19-search.nlp.plural :as plural]))
+
+(c/init! "resources/config.edn")
 
 (s/defschema AppContext
   {:es-conn ess/ESConn})
@@ -121,7 +124,7 @@
                            :filter_duplicate_text true
                            :jlh {}
                            :exclude exclude}}}
-        sampler-agg {:related {:sampler {:shard_size 300}
+        sampler-agg {:related {:sampler (c/get-conf :elasticsearch :sampler)
                                :aggregations significant-agg}}
         res (esd/query es-conn
                        indexname
@@ -134,9 +137,9 @@
     (resp/ok formatted)))
 
 (def app
-  (let [es-conn (esc/connect {:host "localhost"
-                              :port 9200
-                              :protocol :http})
+  (let [es-conn (esc/connect (select-keys
+                              (c/get-conf :elasticsearch)
+                              [:host :port :protocol]))
         ctx {:es-conn es-conn
              :indexname (index/indexname)}]
     (api
