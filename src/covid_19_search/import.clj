@@ -16,5 +16,4 @@
     (index/init conn)
     (doall
      (pmap #(index/index-paper conn %)
-           files))
-  ))
+           files))))

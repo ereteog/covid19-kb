@@ -4,6 +4,7 @@
             [schema.core :as s]
             [schema-tools.core :as st]
             [covid-19-search.index :as index]
+            [clojure.string :as string]
             [ductile.conn :as esc]
             [ductile.schemas :as ess]
             [ductile.document :as esd]
@@ -25,7 +26,7 @@
   (st/open-schema
    (st/optional-keys
     {:paper_id s/Str
-     :abstract [Section]
+     :abstract s/Any
      :body_text [Section]
      :metadata {s/Any s/Any}
      :bib_entries [{s/Any s/Any}]})))
@@ -111,8 +112,8 @@
   [{:keys [es-conn indexname]} :- AppContext
    query :- s/Str
    limit :- s/Int]
-  (let [exclude (cons query
-                      (plural/pluralize-query query))
+  (let [tokens (string/split query #" ")
+        exclude (concat tokens (map plural/pluralize tokens))
         significant-agg {:keywords
                          {:significant_text
                           {:size (min limit 50)

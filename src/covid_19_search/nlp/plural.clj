@@ -52,10 +52,3 @@
     word
     (let [[regex rule] (first (filter #(re-find (re-pattern (key %)) word) rules))]
       (string/replace word (re-pattern regex) rule))))
-
-(defn pluralize-query
-  "takes a query tokenizes it into words and pluralize them"
-  [query]
-  (->> (string/split query #" ")
-       (map pluralize)
-       set))
